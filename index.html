@@ -118,20 +118,28 @@
       <div class="text-white bg-dark">
         <div class="row justify-content-center">
           <div class="col-md-6">
-            <form method="POST" netlify>
+            <div class="alert alert-primary alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Thank You!</strong> Pesan anda sudah terkirim.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <form name="kritik-dan-saran">
               <div class="mb-4">
                 <label for="nama" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama" placeholder="Nama">
+                <input type="text" class="form-control" id="nama" placeholder="Nama" name="nama">
               </div>
               <div class="mb-3">
                 <label for="Email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="@gmail.com">
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="@gmail.com" name="email">
               </div>
               <div class="mb-3">
                 <label for="pesan" class="form-label">Pesan</label>
-                <textarea class="form-control" id="pesan" rows="3"></textarea>
+                <textarea class="form-control" id="pesan" rows="3" name="pesan"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Kirim</button>
+              <button type="submit" class="btn btn-primary btn-kirim">Kirim</button>
+              <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -144,5 +152,28 @@
     </footer>
     <!-- Akhir Footer -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbycciNZ5TL5xAiIuNPqLU6Yiym2T8y4mmrHt_nJZaFtgPI0cM2BKYlN-y7kz_sH7lj0/exec'
+      const form = document.forms['kritik-dan-saran']
+      const btnKirim = document.querySelector('.btn-kirim');
+      const btnLoading = document.querySelector('.btn-loading');
+      const myAlert = document.querySelector('.my-alert');
+    
+      form.addEventListener('submit', e => {
+        e.preventDefault()
+        btnLoading.classList.toggle('d-none');
+        btnKirim.classList.toggle('d-none');
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then((response) => {
+            btnLoading.classList.toggle('d-none');
+            btnKirim.classList.toggle('d-none');
+            myAlert.classList.toggle('d-none');
+            form.reset();
+            console.log('Success!', response);
+          })
+          .catch((error) => console.error('Error!', error.message))
+      })
+    </script>
   </body>
 </html>
